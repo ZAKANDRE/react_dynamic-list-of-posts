@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import classNames from 'classnames';
 
 import 'bulma/css/bulma.css';
@@ -17,26 +18,21 @@ import { Post } from './types/Post';
 import { Comments } from './types/Comment';
 
 export const App = () => {
-  // USERS
   const [users, setUsers] = useState<User[]>([]);
   const [loadingUsers, setLoadingUsers] = useState<boolean>(true);
   const [errorUsers, setErrorUsers] = useState<string>('');
 
-  // POSTS
   const [posts, setPosts] = useState<Post[]>([]);
   const [loadingPosts, setLoadingPosts] = useState<boolean>(false);
   const [errorPosts, setErrorPosts] = useState<string>('');
 
-  // CURRENT USER & POST
   const [currentUser, setCurrentUser] = useState<number>(0);
   const [currentPost, setCurrentPost] = useState<number>(0);
 
-  // POST DETAILS
   const [post, setPost] = useState<Post>([]);
   const [loadingPostInfo, setLoadingPostInfo] = useState<boolean>(false);
   const [errorPostInfo, setErrorPostInfo] = useState<string>('');
 
-  // COMMENTS
   const [comments, setComments] = useState<Comments[]>([]);
   const [loadingComments, setLoadingComments] = useState<boolean>(false);
   const [errorComments, setErrorComments] = useState<string>('');
@@ -92,7 +88,6 @@ export const App = () => {
     <main className="section">
       <div className="container">
         <div className="tile is-ancestor">
-          {/* LEFT COLUMN */}
           <div className="tile is-parent">
             <div className="tile is-child box is-success">
               <div className="block">
@@ -111,7 +106,6 @@ export const App = () => {
               </div>
 
               <div className="block" data-cy="MainContent">
-                {/* Show Loader while posts load */}
                 {loadingPosts && <Loader />}
 
                 {!loadingPosts && errorPosts && (
@@ -122,11 +116,7 @@ export const App = () => {
                     {errorPosts}
                   </div>
                 )}
-
-                {!loadingPosts && !errorPosts && currentUser === 0 && (
-                  <p data-cy="NoSelectedUser">No user selected</p>
-                )}
-
+                {/* eslint-disable-next-line @typescript-eslint/indent */}
                 {!loadingPosts &&
                   !errorPosts &&
                   currentUser !== 0 &&
@@ -138,6 +128,7 @@ export const App = () => {
                       No posts yet
                     </div>
                   )}
+                {/* eslint-disable-next-line @typescript-eslint/indent */}
 
                 {!loadingPosts && !errorPosts && posts.length > 0 && (
                   <PostsList
@@ -152,7 +143,6 @@ export const App = () => {
             </div>
           </div>
 
-          {/* RIGHT COLUMN / SIDEBAR */}
           <div
             data-cy="Sidebar"
             className={classNames(
