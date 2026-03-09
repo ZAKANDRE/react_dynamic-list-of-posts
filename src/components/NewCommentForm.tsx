@@ -83,7 +83,10 @@ export const NewCommentForm: React.FC<NewCmt> = ({
               'is-danger': errorName,
             })}
             value={name}
-            onChange={e => setName(e.target.value)}
+            onChange={e => {
+              setName(e.target.value);
+              setErrorName(false);
+            }}
           />
           <span className="icon is-small is-left">
             <i className="fas fa-user" />
@@ -119,7 +122,10 @@ export const NewCommentForm: React.FC<NewCmt> = ({
               'is-danger': errorEmail,
             })}
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={e =>{
+              setEmail(e.target.value);
+              setErrorEmail(false);
+            }}
           />
           <span className="icon is-small is-left">
             <i className="fas fa-envelope" />
@@ -155,7 +161,10 @@ export const NewCommentForm: React.FC<NewCmt> = ({
               'is-danger': errorBody,
             })}
             value={body}
-            onChange={e => setBody(e.target.value)}
+            onChange={e => {
+              setBody(e.target.value);
+              setErrorBody(false);
+            }}
           />
         </div>
         {errorBody && (

@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Loader } from './Loader';
 import { NewCommentForm } from './NewCommentForm';
 import { Post } from '../types/Post';
 import { Comments } from '../types/Comment';
-import { deleteComment } from '../api/commentsApi';
 
 type PostInfo = {
-  data: Post;
+  data: Post | null;
   loadingState: boolean;
   error: string;
   onError: (value: string) => void;
-  commentInfos: Comments[];
+  comments: Comments[];
+  onAddComment: (comment: Comments) => void;
+  onDeleteComment: (id: number) => void;
   postId: number;
   isVisible: boolean;
   setIsVisible: (value: boolean) => void;
@@ -21,30 +22,13 @@ export const PostDetails: React.FC<PostInfo> = ({
   loadingState,
   error,
   onError,
-  commentInfos,
+  comments,
   postId,
   isVisible,
   setIsVisible,
+  onAddComment,
+  onDeleteComment,
 }) => {
-  const [comments, setComments] = useState<Comments[]>(commentInfos);
-
-  useEffect(() => {
-    setComments(commentInfos);
-  }, [commentInfos]);
-
-  const handleAddComment = (newComment: Comments) => {
-    setComments(prev => [...prev, newComment]);
-  };
-
-  const handleDeleteCmt = async (id: number) => {
-    setComments(prev => prev.filter(comment => comment.id !== id));
-    try {
-      await deleteComment(id);
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      onError(`Failed to delete comment ${err}`);
-    }
-  };
 
   return (
     <div className="content" data-cy="PostDetails">
@@ -86,7 +70,7 @@ export const PostDetails: React.FC<PostInfo> = ({
                     type="button"
                     className="delete is-small"
                     aria-label="delete"
-                    onClick={() => handleDeleteCmt(comment.id)}
+                    onClick={() => onDeleteComment(comment.id)}
                   />
                 </div>
                 <div className="message-body" data-cy="CommentBody">
@@ -112,7 +96,7 @@ export const PostDetails: React.FC<PostInfo> = ({
       {!isVisible && (
         <NewCommentForm
           currentPost={postId}
-          onAdd={handleAddComment}
+          onAdd={onAddComment}
           setError={onError}
         />
       )}

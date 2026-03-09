@@ -12,7 +12,7 @@ import { Loader } from './components/Loader';
 import { useEffect, useState } from 'react';
 import { getUsers } from './api/users';
 import { getUsersPosts, getPostsDetails } from './api/postsApi';
-import { getComments } from './api/commentsApi';
+import { getComments,  deleteComment  } from './api/commentsApi';
 import { User } from './types/User';
 import { Post } from './types/Post';
 import { Comments } from './types/Comment';
@@ -22,14 +22,14 @@ export const App = () => {
   const [loadingUsers, setLoadingUsers] = useState<boolean>(true);
   const [errorUsers, setErrorUsers] = useState<string>('');
 
-  const [posts, setPosts] = useState<Post[]>({});
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loadingPosts, setLoadingPosts] = useState<boolean>(false);
   const [errorPosts, setErrorPosts] = useState<string>('');
 
   const [currentUser, setCurrentUser] = useState<number>(0);
   const [currentPost, setCurrentPost] = useState<number>(0);
 
-  const [post, setPost] = useState<Post>({});
+  const [post, setPost] = useState<Post | null>(null);
   const [loadingPostInfo, setLoadingPostInfo] = useState<boolean>(false);
   const [errorPostInfo, setErrorPostInfo] = useState<string>('');
 
@@ -82,6 +82,20 @@ export const App = () => {
       .catch(() => setErrorComments('Something went wrong'))
       .finally(() => setLoadingComments(false));
   }, [currentPost]);
+
+  const handleAddComment = (newComment: Comments) => {
+    setComments(prev => [...prev, newComment]);
+  };
+
+  const handleDeleteComment = async (id: number) => {
+    setComments(prev => prev.filter(comment => comment.id !== id));
+
+    try {
+      await deleteComment(id);
+    } catch {
+      setErrorComments('Failed to delete comment');
+    }
+  };
 
   return (
     <main className="section">
@@ -163,10 +177,12 @@ export const App = () => {
                 loadingState={loadingPostInfo || loadingComments}
                 error={errorPostInfo || errorComments}
                 onError={setErrorComments}
-                commentInfos={comments}
+                comments={comments}
                 postId={currentPost}
                 isVisible={commentBtn}
                 setIsVisible={setCommentsBtn}
+                onAddComment={handleAddComment}
+                onDeleteComment={handleDeleteComment}
               />
             </div>
           </div>
