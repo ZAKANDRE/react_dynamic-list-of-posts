@@ -22,14 +22,14 @@ export const App = () => {
   const [loadingUsers, setLoadingUsers] = useState<boolean>(true);
   const [errorUsers, setErrorUsers] = useState<string>('');
 
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<Post[]>({});
   const [loadingPosts, setLoadingPosts] = useState<boolean>(false);
   const [errorPosts, setErrorPosts] = useState<string>('');
 
   const [currentUser, setCurrentUser] = useState<number>(0);
   const [currentPost, setCurrentPost] = useState<number>(0);
 
-  const [post, setPost] = useState<Post>([]);
+  const [post, setPost] = useState<Post>({});
   const [loadingPostInfo, setLoadingPostInfo] = useState<boolean>(false);
   const [errorPostInfo, setErrorPostInfo] = useState<string>('');
 
@@ -38,6 +38,7 @@ export const App = () => {
   const [errorComments, setErrorComments] = useState<string>('');
 
   const [isOpenSide, setIsOpenSide] = useState<boolean>(false);
+  const [commentBtn, setCommentsBtn] = useState<boolean>(true);
 
   useEffect(() => {
     setLoadingUsers(true);
@@ -63,8 +64,6 @@ export const App = () => {
 
   useEffect(() => {
     if (currentPost === 0) {
-      // setPost([]);
-      // setComments([]);
       return;
     }
 
@@ -94,17 +93,21 @@ export const App = () => {
                 {loadingUsers && currentUser !== 0 ? (
                   <Loader />
                 ) : (
-                  <UserSelector
-                    usersFromServer={users}
-                    activeUser={currentUser}
-                    onUser={setCurrentUser}
-                  />
+                  <>
+                    <UserSelector
+                      usersFromServer={users}
+                      activeUser={currentUser}
+                      onUser={setCurrentUser}
+                    />
+                  </>
                 )}
                 {errorUsers && (
                   <div className="notification is-danger">{errorUsers}</div>
                 )}
               </div>
-
+              {currentUser === 0 && (
+                <p data-cy="NoSelectedUser">No user selected</p>
+              )}
               <div className="block" data-cy="MainContent">
                 {loadingPosts && <Loader />}
 
@@ -137,6 +140,7 @@ export const App = () => {
                     activePost={currentPost}
                     isOpen={isOpenSide}
                     onOpen={setIsOpenSide}
+                    onVisibleWriteBtn={setCommentsBtn}
                   />
                 )}
               </div>
@@ -158,8 +162,11 @@ export const App = () => {
                 data={post}
                 loadingState={loadingPostInfo || loadingComments}
                 error={errorPostInfo || errorComments}
+                onError={setErrorComments}
                 commentInfos={comments}
                 postId={currentPost}
+                isVisible={commentBtn}
+                setIsVisible={setCommentsBtn}
               />
             </div>
           </div>

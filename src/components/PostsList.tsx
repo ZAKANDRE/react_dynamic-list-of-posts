@@ -8,12 +8,14 @@ type PostInfo = {
   onCurrentPost: (value: number) => void;
   isOpen?: boolean;
   onOpen: (value: boolean) => void;
+  onVisibleWriteBtn: (value: boolean) => void;
 };
 export const PostsList: React.FC<PostInfo> = ({
   data,
   activePost,
   onCurrentPost,
   onOpen,
+  onVisibleWriteBtn,
 }) => {
   const handleBtn = (postId: number) => {
     if (activePost === postId) {
@@ -55,6 +57,7 @@ export const PostsList: React.FC<PostInfo> = ({
                   })}
                   onClick={() => {
                     handleBtn(post.id);
+                    onVisibleWriteBtn(true);
                   }}
                 >
                   {activePost === post.id ? 'Close' : 'Open'}

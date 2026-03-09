@@ -6,9 +6,14 @@ import classNames from 'classnames';
 type NewCmt = {
   currentPost: number;
   onAdd: (comment: Comments) => void;
+  setError: (value: string) => void;
 };
 
-export const NewCommentForm: React.FC<NewCmt> = ({ currentPost, onAdd }) => {
+export const NewCommentForm: React.FC<NewCmt> = ({
+  currentPost,
+  onAdd,
+  setError,
+}) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [body, setBody] = useState('');
@@ -44,12 +49,9 @@ export const NewCommentForm: React.FC<NewCmt> = ({ currentPost, onAdd }) => {
 
       onAdd(newComment);
 
-      setName('');
-      setEmail('');
       setBody('');
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to create comment', error);
+    } catch (err) {
+      setError(`Something goes wrong ! ${err}`);
     } finally {
       setIsLoading(false);
     }
